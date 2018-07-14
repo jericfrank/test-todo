@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 import {
   ListItem,
   IconButton,
@@ -7,17 +7,24 @@ import {
 
 import { Add } from '@material-ui/icons';
 
+import Label from '../components/label';
+import { addTodo } from '../actions';
+
 class AddTask extends Component {
   render() {
     return (
-      <ListItem button>
+      <ListItem button onClick={this.props.createTodo}>
         <IconButton>
           <Add color="primary" />
         </IconButton>
-        <label>Add a task</label>
+        <Label title="Add a task" />
       </ListItem>
     );
   }
 }
 
-export default AddTask;
+const mapDispatchToProps = (dispatch, props) => ({
+  createTodo: () => dispatch(addTodo()),
+});
+
+export default connect(null, mapDispatchToProps)(AddTask);

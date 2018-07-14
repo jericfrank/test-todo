@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 import {
   ListItem,
   TextField,
@@ -7,23 +7,40 @@ import {
 } from '@material-ui/core';
 import RadioIcon from '@material-ui/icons/RadioButtonUnchecked';
 
+import { editTodo } from '../actions';
+
 class EditTask extends Component {
   handleChange = (e) => {
     if ( e.key === 'Enter' ) {
-      this.props.onSubmit();
+      this.props.updateTodo(e.target.value);
     }
   };
 
   render() {
     return (
       <ListItem>
-        <IconButton>
+        <IconButton onClick={this.props.toggleTodo}>
           <RadioIcon />
         </IconButton>
-        <TextField fullWidth onKeyPress={this.handleChange} autoFocus />
+        <TextField fullWidth onKeyPress={this.handleChange} defaultValue={this.props.value.text} placeholder="new task" autoFocus />
       </ListItem>
     );
   }
 }
 
-export default EditTask;
+const mapDispatchToProps = (dispatch, props) => ({
+  updateTodo: (text) => {
+    props.onHide();
+    const payload = {
+      ...props.value,
+      text
+    };
+    dispatch(editTodo(payload));
+  },
+  toggleTodo: () => {
+    const payload = { ...props.value, completed: true };
+    dispatch(editTodo(payload));
+  },
+});
+
+export default connect(null, mapDispatchToProps)(EditTask);

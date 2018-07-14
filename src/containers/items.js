@@ -1,5 +1,6 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 import {
   ListItem,
   Divider,
@@ -7,6 +8,8 @@ import {
 import IconButton from '@material-ui/core/IconButton';
 import RadioIcon from '@material-ui/icons/RadioButtonUnchecked';
 
+import Label from '../components/label';
+import { editTodo } from '../actions';
 import EditTask from './editTask';
 
 class Items extends Component {
@@ -18,10 +21,10 @@ class Items extends Component {
     return (
       <div>
         <ListItem>
-          <IconButton>
+          <IconButton onClick={this.props.updateTodo}>
             <RadioIcon />
           </IconButton>
-          <label onClick={() => this.setState({ edit: true })}>{this.props.value}</label>
+          <Label onClick={() => this.setState({ edit: true })} title={this.props.value.text} />
         </ListItem>
         <Divider inset component="li" light />
       </div>
@@ -29,12 +32,25 @@ class Items extends Component {
   };
 
   render() {
+    const { text } = this.props.value;
     return (
       <div>
-        {this.state.edit ? <EditTask onSubmit={() => this.setState({ edit: false })} /> : this.renderItemText() }
+        {this.state.edit || _.isEmpty(text) ? <EditTask value={this.props.value} onHide={() => this.setState({ edit: false })} /> : this.renderItemText() }
       </div>
     );
   }
 }
 
-export default Items;
+const mapDispatchToProps = (dispatch, props) => ({
+  updateTodo: () => {
+    const { id, text } = props.value;
+    const payload = {
+      id,
+      text,
+      completed: true,
+    };
+    dispatch(editTodo(payload));
+  },
+});
+
+export default connect(null, mapDispatchToProps)(Items);

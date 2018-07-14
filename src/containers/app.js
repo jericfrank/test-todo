@@ -1,11 +1,13 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 
+import { selectTodosIncomplete, selectTodosCount } from '../selectors';
 import Header from '../components/header';
 import AddTask from './addTask';
 import Items from './items';
@@ -20,18 +22,16 @@ const styles = theme => ({
   },
 });
 
-const ITEMS = [ 'go shopping', 'call telephone company', 'call mother' ];
-
 class App extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, todos, count } = this.props;
     return (
       <div className={classes.root}>
-        <Header heading="Nico Smit's List (10)" subheading="TASKS" />
+        <Header heading={`Todo List (${count})`} subheading="TASKS" />
         <Divider />
         <List dense component="nav">
           <AddTask />
-          {_.map(ITEMS, (value, index) => (
+          {_.map(todos, (value, index) => (
             <Items value={value} key={index} />
           ))}
         </List>
@@ -40,8 +40,17 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
+const mapStateToProps = (state) => {
+  return {
+    todos: selectTodosIncomplete(state),
+    count: selectTodosCount(state),
+  };
 };
 
-export default withStyles(styles)(App);
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+  todos: PropTypes.array,
+  count: PropTypes.number,
+};
+
+export default connect( mapStateToProps, null )( withStyles(styles)(App) );
