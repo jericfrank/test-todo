@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function( state = [], action ) {
 	switch ( action.type ) {
     case 'ADD_TODO':
@@ -15,6 +17,9 @@ export default function( state = [], action ) {
 			return state.map(todo => (todo.id === action.id) ? {
 				id, text, completed
 			} : todo );
+
+		case 'REMOVE_TODO':
+			return _.reject(state, { id: action.id });
 
 		default:
 			return state;

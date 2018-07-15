@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import RadioIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 import Label from '../components/label';
-import { editTodo } from '../actions';
+import { removeTodo } from '../actions';
 import EditTask from './editTask';
 
 class Items extends Component {
@@ -43,13 +43,8 @@ class Items extends Component {
 
 const mapDispatchToProps = (dispatch, props) => ({
   updateTodo: () => {
-    const { id, text } = props.value;
-    const payload = {
-      id,
-      text,
-      completed: true,
-    };
-    dispatch(editTodo(payload));
+    const { id } = props.value;
+    dispatch(removeTodo(id));
   },
 });
 

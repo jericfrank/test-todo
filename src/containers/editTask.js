@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import RadioIcon from '@material-ui/icons/RadioButtonUnchecked';
 
-import { editTodo } from '../actions';
+import { editTodo, removeTodo } from '../actions';
 
 class EditTask extends Component {
   handleChange = (e) => {
@@ -38,8 +38,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     dispatch(editTodo(payload));
   },
   toggleTodo: () => {
-    const payload = { ...props.value, completed: true };
-    dispatch(editTodo(payload));
+    dispatch(removeTodo(props.value.id));
   },
 });
 
